@@ -7,12 +7,21 @@ OverflowPrevent = 1000
 m = 0
 b = 0
 L = 0.0001
-epochs = 1000
+epochs = 50
 
 GraphMin = 0
 GraphMax = 200000
 
 data = pd.read_csv("C:\\Users\\coole\\Documents\\AI\\LinearRegression\\TestData\\"+filename)
+
+def loss_function(m, b, points):
+    total_error = 0
+    for i in range(len(points)):
+        x = points.iloc[i].IV
+        y = points.iloc[i].DV
+        total_error += (y - (m * x + b)) ^ 2
+
+    total_error / float(len(points))
 
 #L = Learning Rate
 def gradient_descent(m_now, b_now, points, L):
@@ -31,6 +40,7 @@ def gradient_descent(m_now, b_now, points, L):
     m = m_now - m_gradient * L
     b = b_now - b_gradient * L
     return m, b
+
 
 
 for i in range(epochs):
