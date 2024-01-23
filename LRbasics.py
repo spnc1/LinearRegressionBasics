@@ -1,55 +1,46 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-filename = 'Housing.csv'
+filename = 'ExampleData.csv'
 OverflowPrevent = 1000
 
 m = 0
-b = 0
+c = -5
 L = 0.0001
-epochs = 50
+#epochs = 50
 
 GraphMin = 0
-GraphMax = 200000
+GraphMax = 5
+
+X = []
+Y = []
 
 data = pd.read_csv("C:\\Users\\coole\\Documents\\AI\\LinearRegression\\TestData\\"+filename)
 
-def loss_function(m, b, points):
-    total_error = 0
+def loss_function(m, c, points):
+    x_error = 0
+    y_error = 0
+    total_x_error = 0
+    total_y_error = 0
     for i in range(len(points)):
         x = points.iloc[i].IV
         y = points.iloc[i].DV
-        total_error += (y - (m * x + b)) ^ 2
 
-    total_error / float(len(points))
+        y_error = y - (m*x+c)
+        total_y_error += y_error*y_error
 
-#L = Learning Rate
-def gradient_descent(m_now, b_now, points, L):
-    m_gradient = 0
-    b_gradient = 0
+    X.append(c)
+    Y.append(total_y_error)
+    
 
-    n = len(points)
-
-    for i in range(n):
-        x = points.iloc[i].price/OverflowPrevent
-        y = points.iloc[i].lotsize/OverflowPrevent
-
-        m_gradient += -(2/n) * x * (y - (m_now * x + b_now))
-        b_gradient += -(2/n) * (y - (m_now * x + b_now))
-
-    m = m_now - m_gradient * L
-    b = b_now - b_gradient * L
-    return m, b
+for i in range(15):
+    loss_function(m,c,data)
+    c+=1
 
 
 
-for i in range(epochs):
-    if i % 50 == 0:
-        print(f"Epoch: {i}")
-    m, b = gradient_descent(m, b, data, L)
+#plt.scatter(data.IV,data.DV)
+#plt.plot(list(range(GraphMin,GraphMax+1)), [m * x + c for x in range(GraphMin,GraphMax+1)], color="red")
 
-print(m, b)
-
-plt.scatter(data.price,data.lotsize)
-plt.plot(list(range(GraphMin,GraphMax)), [m * x + b for x in range(GraphMin,GraphMax)], color="red")
+plt.scatter(X,Y)
 plt.show()
